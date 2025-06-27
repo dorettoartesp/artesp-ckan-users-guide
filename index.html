@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual do Usuário CKAN</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Estilos para a barra de rolagem da barra lateral */
+        aside::-webkit-scrollbar {
+            width: 5px;
+        }
+        aside::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        aside::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        aside::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-700">
+
+    <div class="flex flex-col md:flex-row min-h-screen">
+
+        <!-- Barra Lateral de Navegação (Esquerda) -->
+        <aside class="w-full md:w-1/4 lg:w-1/5 xl:w-1/6 bg-white border-r p-6 md:sticky md:top-0 md:self-start md:h-screen overflow-y-auto">
+            <div class="flex items-center mb-8">
+                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600 mr-2" viewBox="0 0 24 24" fill="currentColor"><path d="M21.92,11.6C21.78,11.23,21.42,11,21,11H17.8L19,9.45V9A1,1,0,0,0,18,8H16V6A1,1,0,0,0,15,5H13V3A1,1,0,0,0,12,2H11A1,1,0,0,0,10,3V5H8A1,1,0,0,0,7,6V8H5A1,1,0,0,0,4,9V9.45L5.2,11H2A1,1,0,0,0,1.08,11.6L3,18V21A1,1,0,0,0,4,22H20A1,1,0,0,0,21,21V18L21.92,11.6M19,19H5V17.32L3.68,13H7.17L6.42,12.1A1,1,0,0,0,6.42,12.9L7.5,14H9V12A1,1,0,0,0,8,11H9V9H11V11H13V9H15V11H16A1,1,0,0,0,15,12V14H16.5L17.58,12.9A1,1,0,0,0,17.58,12.1L16.83,13H20.32L19,17.32V19Z" /></svg>
+                <h1 class="text-xl font-bold text-gray-800">Manual CKAN</h1>
+            </div>
+            <nav>
+                <ul class="space-y-2">
+                    <li><a href="#introducao" class="font-semibold text-gray-600 hover:text-blue-600">Introdução</a></li>
+                    <li>
+                        <a href="#o-que-e-ckan" class="font-semibold text-gray-600 hover:text-blue-600">O que é CKAN?</a>
+                        <ul class="pl-4 mt-2 space-y-2 border-l border-gray-200">
+                            <li><a href="#conjuntos-dados-recursos" class="text-sm text-gray-500 hover:text-blue-600">Conjuntos de Dados e Recursos</a></li>
+                            <li><a href="#usuarios-organizacoes" class="text-sm text-gray-500 hover:text-blue-600">Usuários e Organizações</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#recursos-publicadores" class="font-semibold text-gray-600 hover:text-blue-600">Recursos para Publicadores</a>
+                         <ul class="pl-4 mt-2 space-y-2 border-l border-gray-200">
+                            <li><a href="#adicionar-dataset" class="text-sm text-gray-500 hover:text-blue-600">Adicionar um novo conjunto de dados</a></li>
+                            <li><a href="#editar-dataset" class="text-sm text-gray-500 hover:text-blue-600">Editar um conjunto de dados</a></li>
+                            <li><a href="#gerenciar-recursos" class="text-sm text-gray-500 hover:text-blue-600">Gerenciar Recursos</a></li>
+                             <li><a href="#excluir-dataset" class="text-sm text-gray-500 hover:text-blue-600">Excluir um conjunto de dados</a></li>
+                            <li><a href="#criar-organizacao" class="text-sm text-gray-500 hover:text-blue-600">Criar uma organização</a></li>
+                            <li><a href="#gerenciar-organizacao" class="text-sm text-gray-500 hover:text-blue-600">Gerenciar uma organização</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#encontrando-dados" class="font-semibold text-gray-600 hover:text-blue-600">Encontrando Dados</a>
+                        <ul class="pl-4 mt-2 space-y-2 border-l border-gray-200">
+                            <li><a href="#pesquisa-site" class="text-sm text-gray-500 hover:text-blue-600">Pesquisando no site</a></li>
+                            <li><a href="#explorando-datasets" class="text-sm text-gray-500 hover:text-blue-600">Explorando conjuntos de dados</a></li>
+                            <li><a href="#pesquisa-detalhada" class="text-sm text-gray-500 hover:text-blue-600">Pesquisa Simples e Avançada</a></li>
+                        </ul>
+                    </li>
+                     <li>
+                        <a href="#personalizacao" class="font-semibold text-gray-600 hover:text-blue-600">Personalização</a>
+                        <ul class="pl-4 mt-2 space-y-2 border-l border-gray-200">
+                            <li><a href="#feed-noticias" class="text-sm text-gray-500 hover:text-blue-600">Gerenciando seu Feed de Notícias</a></li>
+                            <li><a href="#perfil-usuario" class="text-sm text-gray-500 hover:text-blue-600">Gerenciando seu Perfil de Usuário</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Área de Conteúdo Principal (Direita) -->
+        <main class="w-full md:w-3/4 lg:w-4/5 xl:w-5/6 p-6 md:p-10 lg:p-12">
+            
+            <section id="introducao">
+                <h2 class="text-3xl font-bold text-blue-700 border-b-2 border-blue-100 pb-2 mb-6">Guia do Usuário CKAN</h2>
+                <p class="text-lg text-gray-600 mb-4">Este guia do usuário aborda o uso da interface web do CKAN para organizar, publicar e encontrar dados. O CKAN também possui uma poderosa API (interface de máquina), que facilita o desenvolvimento de extensões e a integração com outros sistemas de informação.</p>
+                <p class="text-lg text-gray-600">Alguns recursos da interface web relacionados à administração do site estão disponíveis apenas para usuários com status de administrador do sistema (sysadmin).</p>
+            </section>
+
+            <section id="o-que-e-ckan" class="mt-12">
+                <h2 class="text-3xl font-bold text-blue-700 border-b-2 border-blue-100 pb-2 mb-6">O que é CKAN?</h2>
+                <p class="mb-4">CKAN é uma ferramenta para criar sites de dados abertos. Pense nele como um sistema de gerenciamento de conteúdo (CMS) como o WordPress, mas para dados em vez de páginas e posts de blog. Ele ajuda a gerenciar e publicar coleções de dados, sendo utilizado por governos nacionais e locais, instituições de pesquisa e outras organizações que coletam grandes volumes de dados.</p>
+                <p>Uma vez que seus dados são publicados, os usuários podem usar seus recursos de busca facetada para navegar e encontrar os dados de que precisam, e pré-visualizá-los usando mapas, gráficos e tabelas.</p>
+                
+                <h3 id="conjuntos-dados-recursos" class="text-2xl font-semibold text-blue-600 mt-8 mb-4">Conjuntos de Dados e Recursos</h3>
+                <p class="mb-4">No CKAN, os dados são publicados em unidades chamadas "conjuntos de dados" (datasets). Um conjunto de dados é uma parcela de dados — por exemplo, as estatísticas de criminalidade de uma região, os números de gastos de um departamento governamental ou leituras de temperatura de várias estações meteorológicas.</p>
+                <p class="mb-4">Um conjunto de dados contém duas coisas:</p>
+                <ul class="list-disc list-inside space-y-2 mb-4 pl-4">
+                    <li><strong>Metadados:</strong> Informações sobre os dados, como título, publicador, data, formatos disponíveis, licença de uso, etc.</li>
+                    <li><strong>Recursos:</strong> Os próprios dados. Um recurso pode ser uma planilha CSV ou Excel, um arquivo XML, um documento PDF, um arquivo de imagem, etc. O CKAN pode armazenar o recurso internamente ou simplesmente como um link para um local externo na web.</li>
+                </ul>
+                <div class="mt-4 p-4 bg-blue-50 border-l-4 border-blue-400 rounded-r-lg">
+                    <p><strong class="font-semibold text-blue-800">Nota:</strong> Em versões antigas do CKAN, os conjuntos de dados eram chamados de "pacotes" (packages). Esse nome ainda pode aparecer em alguns locais, especialmente internamente e em chamadas de API, mas tem o mesmo significado de "conjunto de dados".</p>
+                </div>
+                
+                <h3 id="usuarios-organizacoes" class="text-2xl font-semibold text-blue-600 mt-8 mb-4">Usuários e Organizações</h3>
+                <p class="mb-4">Os usuários do CKAN podem registrar contas e fazer login. Normalmente, o login não é necessário para pesquisar e baixar dados, mas é essencial para todas as funções de publicação.</p>
+                <p class="mb-4">Cada conjunto de dados geralmente pertence a uma "organização". Uma instância do CKAN pode ter várias organizações. Por exemplo, se o CKAN for usado como um portal de dados por um governo, as organizações podem ser os diferentes ministérios.</p>
+                <p>Os administradores de uma organização podem adicionar usuários a ela, com diferentes papéis (Membro, Editor, Admin) dependendo do nível de autorização necessário.</p>
+            </section>
+            
+            <section id="recursos-publicadores" class="mt-12">
+                <h2 class="text-3xl font-bold text-blue-700 border-b-2 border-blue-100 pb-2 mb-6">Recursos para Publicadores</h2>
+                
+                <h3 id="adicionar-dataset" class="text-2xl font-semibold text-blue-600 mt-8 mb-4">Adicionar um novo conjunto de dados</h3>
+                <p class="mb-4"><strong>Passo 1:</strong> Para criar um conjunto de dados, clique em "Conjuntos de Dados" no topo da página e, em seguida, no botão "Adicionar Conjunto de Dados". Alternativamente, acesse a página da sua organização e clique no mesmo botão.</p>
+                <p class="mb-4"><strong>Passo 2:</strong> Preencha os metadados básicos:</p>
+                 <ul class="list-disc list-inside space-y-2 mb-4 pl-4">
+                    <li><strong>Título:</strong> Um título breve e específico.</li>
+                    <li><strong>Descrição:</strong> Detalhes sobre a origem e o uso dos dados.</li>
+                    <li><strong>Etiquetas (Tags):</strong> Palavras-chave para ajudar na busca (ex: "população", "crime").</li>
+                    <li><strong>Licença:</strong> Informação crucial sobre como os dados podem ser usados.</li>
+                    <li><strong>Organização:</strong> A organização que será proprietária do conjunto de dados.</li>
+                </ul>
+                <img src="https://placehold.co/800x450/e2e8f0/4a5568?text=Tela+de+Criação+de+Dataset" alt="Tela de Criação de um novo Conjunto de Dados no CKAN" class="mt-4 rounded-lg shadow-md w-full max-w-4xl mx-auto">
+                
+                <p class="mt-6 mb-4"><strong>Passo 3:</strong> Clique em "Próximo: Adicionar Dados".</p>
+
+                <p class="mb-4"><strong>Passo 4:</strong> Adicione um ou mais "recursos". Você pode fazer o upload de um arquivo do seu computador ou fornecer um link para os dados na web.</p>
+                <img src="https://placehold.co/800x450/e2e8f0/4a5568?text=Tela+para+Adicionar+Recursos" alt="Tela para Adicionar Recursos a um Conjunto de Dados" class="mt-4 rounded-lg shadow-md w-full max-w-4xl mx-auto">
+
+                <p class="mt-6 mb-4"><strong>Passo 5:</strong> Preencha o Nome, Descrição e Formato do recurso.</p>
+
+                <p class="mb-4"><strong>Passo 6:</strong> Após adicionar todos os recursos, clique em "Próximo: Informações Adicionais".</p>
+
+                <p class="mb-4"><strong>Passo 7:</strong> Defina a visibilidade como "Público" ou "Privado" e adicione informações de autoria.</p>
+                
+                <p class="mb-4"><strong>Passo 8:</strong> Clique em "Finalizar". Seu conjunto de dados está criado!</p>
+
+
+                <h3 id="editar-dataset" class="text-2xl font-semibold text-blue-600 mt-8 mb-4">Editar um conjunto de dados</h3>
+                <p class="mb-4">Para editar um conjunto de dados do qual você é membro ou proprietário, vá até a página do conjunto de dados e clique no botão "Editar". Você poderá alterar todos os metadados, visibilidade e outras informações.</p>
+
+                <h3 id="gerenciar-recursos" class="text-2xl font-semibold text-blue-600 mt-8 mb-4">Adicionar, excluir e editar recursos</h3>
+                <p class="mb-4">Na página de edição do conjunto de dados, a barra lateral esquerda oferece opções para gerenciar os recursos. Você pode selecionar um recurso existente para editá-lo ou excluí-lo, ou clicar em "Adicionar novo recurso" para incluir mais dados.</p>
+                
+                <h3 id="excluir-dataset" class="text-2xl font-semibold text-blue-600 mt-8 mb-4">Excluir um conjunto de dados</h3>
+                <p class="mb-4">Na página de edição do conjunto de dados, clique no botão "Excluir" e confirme a ação. O conjunto de dados será ocultado, mas não completamente removido. Para exclusão permanente, contate o administrador do site.</p>
+                
+                <h3 id="criar-organizacao" class="text-2xl font-semibold text-blue-600 mt-8 mb-4">Criar uma organização</h3>
+                <p class="mb-4">Se você tiver permissão, pode criar uma nova organização clicando em "Organizações" no menu principal e, em seguida, em "Adicionar Organização". Preencha o nome, a descrição e uma imagem para a página da organização.</p>
+                <img src="https://placehold.co/800x450/e2e8f0/4a5568?text=Tela+de+Criação+de+Organização" alt="Tela de criação de uma nova Organização no CKAN" class="mt-4 rounded-lg shadow-md w-full max-w-4xl mx-auto">
+
+                <h3 id="gerenciar-organizacao" class="text-2xl font-semibold text-blue-600 mt-8 mb-4">Gerenciar uma organização</h3>
+                <p class="mb-4">Se você for um administrador de uma organização, verá um botão "Admin" na página dela. Nesta área, você pode editar as informações da organização e gerenciar seus membros, adicionando usuários e definindo seus papéis (Membro, Editor ou Admin).</p>
+            </section>
+            
+            <section id="encontrando-dados" class="mt-12">
+                <h2 class="text-3xl font-bold text-blue-700 border-b-2 border-blue-100 pb-2 mb-6">Encontrando Dados</h2>
+                
+                <h3 id="pesquisa-site" class="text-2xl font-semibold text-blue-600 mt-8 mb-4">Pesquisando no site</h3>
+                <p class="mb-4">Para encontrar conjuntos de dados, digite qualquer combinação de palavras-chave na caixa de pesquisa presente em qualquer página. Os resultados serão exibidos e você poderá usar os filtros na coluna da esquerda para refinar sua busca por etiquetas, formatos de dados, organizações, etc.</p>
+                <img src="https://placehold.co/800x500/e2e8f0/4a5568?text=Página+de+Resultados+de+Busca" alt="Página de resultados de busca com filtros" class="mt-4 rounded-lg shadow-md w-full max-w-4xl mx-auto">
+                
+                <h3 id="explorando-datasets" class="text-2xl font-semibold text-blue-600 mt-8 mb-4">Explorando conjuntos de dados</h3>
+                <p class="mb-4">Ao encontrar um conjunto de dados de interesse, a página do conjunto de dados mostrará seus metadados e uma lista de recursos. Muitos tipos de recursos (como CSV, XLS, imagens, PDF) podem ser pré-visualizados diretamente na página do recurso, que também oferece a opção de download.</p>
+                
+                <h3 id="pesquisa-detalhada" class="text-2xl font-semibold text-blue-600 mt-8 mb-4">Guia de Busca: Simples e Avançada</h3>
+                <p class="mb-4">O CKAN suporta dois modos de pesquisa a partir do mesmo campo de busca.</p>
+                <strong class="text-lg text-gray-800">Busca Simples:</strong>
+                <p class="mb-4">Se a sua busca não contiver dois-pontos (<code>:</code>), ela será tratada como uma busca simples. Você pode usar modificadores:</p>
+                <ul class="list-disc list-inside space-y-2 mb-4 pl-4">
+                    <li><code>censo</code>: Encontra conjuntos de dados com a palavra "censo".</li>
+                    <li><code>censo +2022</code>: Exige que a palavra "2022" esteja presente.</li>
+                    <li><code>censo -2010</code>: Exclui resultados com a palavra "2010".</li>
+                    <li><code>"censo europeu"</code>: Busca a frase exata.</li>
+                </ul>
+
+                <strong class="text-lg text-gray-800">Busca Avançada:</strong>
+                <p class="mb-4">Se a sua busca contiver dois-pontos (<code>:</code>), você pode especificar campos para a busca, no formato <code>campo:termo</code>.</p>
+                <ul class="list-disc list-inside space-y-2 mb-4 pl-4">
+                    <li><code>title:europeu</code>: Busca "europeu" apenas no campo do título.</li>
+                    <li><code>title:europ*</code>: Usa um curinga para encontrar palavras como "europa" e "europeu".</li>
+                    <li><code>title:europa || title:africa</code>: Busca por "europa" OU "africa" no título.</li>
+                    <li><code>author:powell~</code>: Realiza uma busca por proximidade (fuzzy search), encontrando nomes semelhantes como "jowell".</li>
+                </ul>
+                <div class="mt-4 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded-r-lg">
+                    <p><strong class="font-semibold text-yellow-800">Dica:</strong> Para a busca avançada, você pode usar <code>title</code> para o nome do conjunto de dados e <code>text</code> para um campo geral que inclui autor, licença, etiquetas, etc.</p>
+                </div>
+            </section>
+            
+            <section id="personalizacao" class="mt-12">
+                <h2 class="text-3xl font-bold text-blue-700 border-b-2 border-blue-100 pb-2 mb-6">Personalização</h2>
+                <p class="mb-4">Você precisa estar logado para usar os recursos de personalização.</p>
+                
+                <h3 id="feed-noticias" class="text-2xl font-semibold text-blue-600 mt-8 mb-4">Gerenciando seu Feed de Notícias</h3>
+                <p class="mb-4">No topo de qualquer página, clique no ícone do painel (dashboard) ao lado do seu nome para ver seu Feed de Notícias. Ele mostra alterações em conjuntos de dados, organizações e usuários que você "segue". Para seguir um item, basta clicar no botão "Seguir" na página do conjunto de dados ou da organização.</p>
+                <img src="https://placehold.co/800x450/e2e8f0/4a5568?text=Painel+com+Feed+de+Notícias" alt="Painel do usuário com o Feed de Notícias" class="mt-4 rounded-lg shadow-md w-full max-w-4xl mx-auto">
+                
+                <h3 id="perfil-usuario" class="text-2xl font-semibold text-blue-600 mt-8 mb-4">Gerenciando seu Perfil de Usuário</h3>
+                <p class="mb-4">Clique no ícone de engrenagem no topo da página para editar seu perfil. Você pode alterar seu nome completo, e-mail, uma breve biografia e sua senha. As alterações são salvas ao clicar em "Atualizar Perfil".</p>
+                
+            </section>
+            
+        </main>
+
+    </div>
+
+</body>
+</html>
