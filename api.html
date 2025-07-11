@@ -1,0 +1,1889 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual da API do CKAN</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Estilos para a barra de rolagem */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .code-block-container .active {
+            display: block;
+        }
+
+        .code-block-container .inactive {
+            display: none;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #e5e7eb;
+            margin-bottom: -2px;
+        }
+
+        .tab-button {
+            padding: 8px 16px;
+            cursor: pointer;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+            background-color: #e5e7eb;
+            transition: background-color 0.3s;
+            border: 2px solid transparent;
+            border-bottom: none;
+        }
+
+        .tab-button.active {
+            background-color: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="flex flex-col md:flex-row">
+        <!-- Navegação Lateral -->
+        <aside
+            class="w-full md:w-64 bg-white border-r border-gray-200 p-6 sticky top-0 h-screen overflow-y-auto md:block hidden">
+            <h2 class="text-lg font-bold text-blue-600 mb-6">Navegação</h2>
+            <nav>
+                <ul class="space-y-2">
+                    <li><a href="#introducao" class="text-gray-600 hover:text-blue-600 font-medium">1. Introdução</a>
+                    </li>
+                    <li><a href="#versao" class="text-gray-600 hover:text-blue-600 font-medium">2. Versão da API</a>
+                    </li>
+                    <li><a href="#autenticacao" class="text-gray-600 hover:text-blue-600 font-medium">3.
+                            Autenticação</a></li>
+                    <li>
+                        <a href="#acoes" class="text-gray-600 hover:text-blue-600 font-medium">4. Ações Comuns</a>
+                        <ul class="pl-4 mt-2 space-y-2 border-l-2 border-gray-200">
+                            <li><a href="#listar" class="text-sm text-gray-500 hover:text-blue-600">4.1 Listar
+                                    Objetos</a></li>
+                            <li><a href="#mostrar" class="text-sm text-gray-500 hover:text-blue-600">4.2 Mostrar
+                                    Detalhes</a></li>
+                            <li><a href="#pesquisar" class="text-sm text-gray-500 hover:text-blue-600">4.3 Pesquisar
+                                    Objetos</a></li>
+                            <li><a href="#criar" class="text-sm text-gray-500 hover:text-blue-600">4.4 Criar Objetos</a>
+                            </li>
+                            <li><a href="#atualizar" class="text-sm text-gray-500 hover:text-blue-600">4.5 Atualizar
+                                    Objetos</a></li>
+                            <li><a href="#deletar" class="text-sm text-gray-500 hover:text-blue-600">4.6 Deletar
+                                    Objetos</a></li>
+                            <li><a href="#group-list" class="text-sm text-gray-500 hover:text-blue-600">4.7 Listar Grupos</a></li>
+                            <li><a href="#group-show" class="text-sm text-gray-500 hover:text-blue-600">4.8 Mostrar Detalhes de um Grupo</a></li>
+                            <li><a href="#tag-list" class="text-sm text-gray-500 hover:text-blue-600">4.9 Listar Tags</a></li>
+                            <li><a href="#tag-show" class="text-sm text-gray-500 hover:text-blue-600">4.10 Mostrar Detalhes de uma Tag</a></li>
+                            <li><a href="#user-show" class="text-sm text-gray-500 hover:text-blue-600">4.11 Mostrar Detalhes de um Usuário</a></li>
+                            <li><a href="#organization-list" class="text-sm text-gray-500 hover:text-blue-600">4.12 Listar Organizações</a></li>
+                            <li><a href="#organization-show" class="text-sm text-gray-500 hover:text-blue-600">4.13 Mostrar Detalhes de uma Organização</a></li>
+                            <li><a href="#resource-show" class="text-sm text-gray-500 hover:text-blue-600">4.14 Mostrar Detalhes de um Recurso</a></li>
+                            <li><a href="#resource-search" class="text-sm text-gray-500 hover:text-blue-600">4.15 Pesquisar Recursos</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#upload" class="text-gray-600 hover:text-blue-600 font-medium">5. Upload de
+                            Arquivos</a></li>
+                    <li><a href="#cli" class="text-gray-600 hover:text-blue-600 font-medium">6. CLI e Módulo Python</a>
+                    </li>
+                    <li><a href="#dicas" class="text-gray-600 hover:text-blue-600 font-medium">7. Dicas e Boas
+                            Práticas</a></li>
+                    <li><a href="#guia-rapido" class="text-gray-600 hover:text-blue-600 font-medium">8. Guia Rápido</a>
+                    </li>
+                    
+                    <li><a href="#status-codes" class="text-gray-600 hover:text-blue-600 font-medium">10. Códigos de Status</a></li>
+                    <li><a href="#jsonp-support" class="text-gray-600 hover:text-blue-600 font-medium">11. Suporte a JSONP</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Conteúdo Principal -->
+        <main class="flex-1 p-6 md:p-10 overflow-y-auto">
+            <header class="mb-10 pb-4 border-b border-gray-300">
+                <h1 class="text-4xl font-bold text-gray-900">Manual Detalhado da API do CKAN</h1>
+                <p class="mt-2 text-lg text-gray-600">Um guia completo para interagir com a API do CKAN, com exemplos
+                    práticos.</p>
+            </header>
+
+            <div class="space-y-12">
+                <!-- Seção 1: Introdução -->
+                <section id="introducao">
+                    <h2 class="text-3xl font-semibold text-gray-800 mb-4">1. Introdução à API Action</h2>
+                    <p class="mb-4">A API Action é a forma recomendada e mais poderosa para interagir programaticamente
+                        com uma instância CKAN. Todas as funcionalidades principais acessíveis pela interface web do
+                        CKAN (e algumas adicionais) estão disponíveis através desta API.</p>
+                    <p class="mb-4">As interações com a API geralmente envolvem o envio de um dicionário JSON num pedido
+                        HTTP POST para um dos URLs da API do CKAN. Os parâmetros para a função da API devem ser
+                        fornecidos no dicionário JSON. O CKAN também retornará a sua resposta num dicionário JSON.</p>
+                    <div class="bg-gray-100 p-4 rounded-lg">
+                        <p class="font-mono text-sm"><strong>URL Base para os Exemplos:</strong>
+                            https://dadosabertos.artesp.sp.gov.br</p>
+                        <p class="font-mono text-sm"><strong>Caminho Padrão da API Action:</strong>
+                            /api/3/action/{nome_da_acao}</p>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-gray-700 mt-6 mb-3">Estrutura da Resposta JSON</h3>
+                    <p class="mb-4">Uma resposta típica da API CKAN terá a seguinte estrutura:</p>
+                    <div class="code-block" data-lang="json">
+                        <pre><code class="language-json">{
+  "help": "Texto de ajuda para a ação chamada...",
+  "success": true,
+  "result": [ /* ...dados retornados pela ação... */ ],
+  "error": {
+    "message": "Mensagem de erro",
+    "_type": "Tipo do Erro"
+  }
+}</code></pre>
+                    </div>
+                </section>
+
+                <!-- Seção 2: Versão da API -->
+                <section id="versao">
+                    <h2 class="text-3xl font-semibold text-gray-800 mb-4">2. Versão da API</h2>
+                    <p>A API do CKAN é versionada. A versão atual e recomendada é a v3. É uma boa prática especificar a
+                        versão da API nas suas requisições para garantir compatibilidade futura.</p>
+                </section>
+
+                <!-- Seção 3: Autenticação -->
+                <section id="autenticacao">
+                    <h2 class="text-3xl font-semibold text-gray-800 mb-4">3. Autenticação</h2>
+                    <p>Algumas funções da API exigem autorização. Para se autenticar, você deve fornecer uma Chave de
+                        API (API Token) no cabeçalho <code>Authorization</code> do seu pedido HTTP.</p>
+                    <div class="code-block" data-lang="bash">
+                        <pre><code class="language-bash">Authorization: SUA_CHAVE_DE_API_AQUI</code></pre>
+                    </div>
+                </section>
+
+                <!-- Seção 4: Ações Comuns -->
+                <section id="acoes">
+                    <h2 class="text-3xl font-semibold text-gray-800 mb-4">4. Ações Comuns da API (Exemplos)</h2>
+
+                    <div id="listar" class="mt-8">
+                        <h3 class="text-2xl font-semibold text-gray-700 mb-3">4.1 Listar Objetos</h3>
+                        <p class="mb-4"><strong>a) Listar Datasets (Pacotes) (package_list)</strong>: Retorna uma lista
+                            dos nomes (IDs) de todos os datasets no site.</p>
+                        <div class="code-block-container" id="code-list-datasets">
+                            <div class="tabs">
+                                <button class="tab-button active" data-lang="curl">cURL</button>
+                                <button class="tab-button" data-lang="javascript">JavaScript</button>
+                                <button class="tab-button" data-lang="python">Python</button>
+                                <button class="tab-button" data-lang="go">Go</button>
+                            </div>
+                            <div class="code-wrapper">
+                                <div class="code-block active" data-lang="curl">
+                                    <pre><code class="language-bash">curl -X GET "https://dadosabertos.artesp.sp.gov.br/api/3/action/package_list"</code></pre>
+                                </div>
+                                <div class="code-block inactive" data-lang="javascript">
+                                    <pre><code class="language-javascript">async function listarDatasets() {
+  try {
+    const response = await fetch('https://dadosabertos.artesp.sp.gov.br/api/3/action/package_list');
+    if (!response.ok) {
+      throw new Error(`Erro HTTP! status: ${response.status}`);
+    }
+    const data = await response.json();
+    if (data.success) {
+      console.log('Datasets:', data.result);
+    } else {
+      console.error('Erro ao listar datasets:', data.error);
+    }
+  } catch (error) {
+    console.error('Falha na requisição:', error);
+  }
+}
+listarDatasets();</code></pre>
+                                </div>
+                                <div class="code-block inactive" data-lang="python">
+                                    <pre><code class="language-python">import requests
+import json
+
+try:
+    response = requests.get('https://dadosabertos.artesp.sp.gov.br/api/3/action/package_list')
+    response.raise_for_status()
+    data = response.json()
+    if data.get('success'):
+        print('Datasets:', data.get('result'))
+    else:
+        print('Erro ao listar datasets:', data.get('error'))
+except requests.exceptions.RequestException as e:
+    print(f'Falha na requisição: {e}')</code></pre>
+                                </div>
+                                <div class="code-block inactive" data-lang="go">
+                                    <pre><code class="language-go">package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+)
+
+type CKANResponse struct {
+	Success bool     `json:"success"`
+	Result  []string `json:"result"`
+	Error   json.RawMessage `json:"error,omitempty"`
+}
+
+func main() {
+	resp, err := http.Get("https://dadosabertos.artesp.sp.gov.br/api/3/action/package_list")
+	if err != nil {
+		fmt.Println("Erro ao fazer a requisição:", err)
+		return
+	}
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+	var ckanResp CKANResponse
+	json.Unmarshal(body, &ckanResp)
+	if ckanResp.Success {
+		fmt.Println("Datasets:", ckanResp.Result)
+	} else {
+		fmt.Println("Erro da API CKAN:", string(ckanResp.Error))
+	}
+}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="mostrar" class="mt-8">
+                        <h3 class="text-2xl font-semibold text-gray-700 mb-3">4.2 Mostrar Detalhes de um Objeto</h3>
+                        <p class="mb-4"><strong>a) Mostrar Detalhes de um Dataset (package_show)</strong>: Retorna a
+                            informação completa sobre um dataset específico.</p>
+                        <div class="code-block-container" id="code-show-dataset">
+                            <div class="tabs">
+                                <button class="tab-button active" data-lang="curl">cURL</button>
+                                <button class="tab-button" data-lang="javascript">JavaScript</button>
+                                <button class="tab-button" data-lang="python">Python</button>
+                                <button class="tab-button" data-lang="go">Go</button>
+                            </div>
+                            <div class="code-wrapper">
+                                <div class="code-block active" data-lang="curl">
+                                    <pre><code class="language-bash"># Substitua 'nome-do-dataset' pelo ID real
+curl -X GET "https://dadosabertos.artesp.sp.gov.br/api/3/action/package_show?id=nome-do-dataset"</code></pre>
+                                </div>
+                                <div class="code-block inactive" data-lang="javascript">
+                                    <pre><code class="language-javascript">async function mostrarDataset(datasetId) {
+  try {
+    const response = await fetch(`https://dadosabertos.artesp.sp.gov.br/api/3/action/package_show?id=${datasetId}`);
+    const data = await response.json();
+    if (data.success) {
+      console.log('Detalhes do Dataset:', data.result);
+    } else {
+      console.error(`Erro ao mostrar dataset ${datasetId}:`, data.error);
+    }
+  } catch (error) {
+    console.error('Falha na requisição:', error);
+  }
+}
+mostrarDataset('nome-do-dataset');</code></pre>
+                                </div>
+                                <div class="code-block inactive" data-lang="python">
+                                    <pre><code class="language-python">import requests
+import json
+
+def mostrar_dataset(dataset_id):
+    try:
+        params = {'id': dataset_id}
+        response = requests.get('https://dadosabertos.artesp.sp.gov.br/api/3/action/package_show', params=params)
+        response.raise_for_status()
+        data = response.json()
+        if data.get('success'):
+            print(f"Detalhes do Dataset ({dataset_id}):", json.dumps(data.get('result'), indent=2, ensure_ascii=False))
+        else:
+            print(f"Erro ao mostrar dataset {dataset_id}:", data.get('error'))
+    except requests.exceptions.RequestException as e:
+        print(f"Falha na requisição: {e}")
+
+mostrar_dataset('nome-do-dataset')</code></pre>
+                                </div>
+                                <div class="code-block inactive" data-lang="go">
+                                    <pre><code class="language-go">package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+)
+
+type CKANPackageShowResponse struct {
+	Success bool            `json:"success"`
+	Result  json.RawMessage `json:"result"`
+	Error   json.RawMessage `json:"error,omitempty"`
+}
+
+func main() {
+	datasetId := "nome-do-dataset" // Substitua pelo ID real
+	url := fmt.Sprintf("https://dadosabertos.artesp.sp.gov.br/api/3/action/package_show?id=%s", datasetId)
+	resp, err := http.Get(url)
+	if err != nil {
+		fmt.Println("Erro ao fazer a requisição:", err)
+		return
+	}
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+	var ckanResp CKANPackageShowResponse
+	json.Unmarshal(body, &ckanResp)
+	if ckanResp.Success {
+		fmt.Println("Detalhes do Dataset:", string(ckanResp.Result))
+	} else {
+		fmt.Println("Erro da API CKAN:", string(ckanResp.Error))
+	}
+}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="pesquisar" class="mt-8">
+                        <h3 class="text-2xl font-semibold text-gray-700 mb-3">4.3 Pesquisar Objetos</h3>
+                        <p class="mb-4"><strong>a) Pesquisar Datasets (package_search)</strong>: Permite pesquisar
+                            datasets com base em vários critérios.</p>
+                        <div class="code-block-container" id="code-search-dataset">
+                            <div class="tabs">
+                                <button class="tab-button active" data-lang="curl">cURL</button>
+                                <button class="tab-button" data-lang="javascript">JavaScript</button>
+                                <button class="tab-button" data-lang="python">Python</button>
+                                <button class="tab-button" data-lang="go">Go</button>
+                            </div>
+                            <div class="code-wrapper">
+                                <div class="code-block active" data-lang="curl">
+                                    <pre><code class="language-bash">curl -X GET "https://dadosabertos.artesp.sp.gov.br/api/3/action/package_search?q=rodovias&facet.field=["organization"]&rows=5"</code></pre>
+                                </div>
+                                <div class="code-block inactive" data-lang="javascript">
+                                    <pre><code class="language-javascript">async function pesquisarDatasets(termo) {
+  const params = new URLSearchParams({
+    q: termo,
+    'facet.field': '["organization","tags"]',
+    rows: 5
+  });
+  const response = await fetch(`https://dadosabertos.artesp.sp.gov.br/api/3/action/package_search?${params.toString()}`);
+  const data = await response.json();
+  if (data.success) {
+    console.log('Resultados:', data.result.results);
+    console.log('Facetas:', data.result.search_facets);
+  }
+}
+pesquisarDatasets('rodovias');</code></pre>
+                                </div>
+                                <div class="code-block inactive" data-lang="python">
+                                    <pre><code class="language-python">import requests
+
+def pesquisar_datasets(termo):
+    params = {
+        'q': termo,
+        'facet.field': '["organization", "tags"]',
+        'rows': 5
+    }
+    response = requests.get('https://dadosabertos.artesp.sp.gov.br/api/3/action/package_search', params=params)
+    data = response.json()
+    if data.get('success'):
+        print(f"Resultados para '{termo}':")
+        for pkg in data['result']['results']:
+            print(f"- {pkg['title']} (ID: {pkg['name']})")
+    else:
+        print('Erro na pesquisa:', data.get('error'))
+
+pesquisar_datasets('rodovias')</code></pre>
+                                </div>
+                                <div class="code-block inactive" data-lang="go">
+                                    <pre><code class="language-go">package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+	"net/url"
+)
+
+type CKANSearchResponse struct {
+	Success bool `json:"success"`
+	Result  struct {
+		Results []json.RawMessage `json:"results"`
+	} `json:"result"`
+	Error json.RawMessage `json:"error,omitempty"`
+}
+
+func main() {
+	searchTerm := "rodovias"
+	params := url.Values{}
+	params.Add("q", searchTerm)
+	params.Add("rows", "5")
+
+	fullURL := fmt.Sprintf("https://dadosabertos.artesp.sp.gov.br/api/3/action/package_search?%s", params.Encode())
+	resp, err := http.Get(fullURL)
+	if err != nil {
+		fmt.Println("Erro ao fazer a requisição:", err)
+		return
+	}
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+	var ckanResp CKANSearchResponse
+	json.Unmarshal(body, &ckanResp)
+
+	if ckanResp.Success {
+		fmt.Printf("Resultados para '%s':\n", searchTerm)
+		for _, pkg := range ckanResp.Result.Results {
+			fmt.Println(string(pkg))
+		}
+	} else {
+		fmt.Println("Erro da API CKAN:", string(ckanResp.Error))
+	}
+}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="criar" class="mt-8">
+                        <h3 class="text-2xl font-semibold text-gray-700 mb-3">4.4 Criar Objetos (Requer Autenticação)
+                        </h3>
+                        <p class="mb-4"><strong>a) Criar um Dataset (package_create)</strong>: Cria um novo dataset.</p>
+                        <div class="code-block-container" id="code-create-dataset">
+                            <div class="tabs">
+                                <button class="tab-button active" data-lang="curl">cURL</button>
+                                <button class="tab-button" data-lang="javascript">JavaScript</button>
+                                <button class="tab-button" data-lang="python">Python</button>
+                                <button class="tab-button" data-lang="go">Go</button>
+                            </div>
+                            <div class="code-wrapper">
+                                <div class="code-block active" data-lang="curl">
+                                    <pre><code class="language-bash">curl -X POST "https://dadosabertos.artesp.sp.gov.br/api/3/action/package_create" \
+-H "Authorization: SUA_CHAVE_DE_API_AQUI" \
+-H "Content-Type: application/json" \
+-d '{
+  "name": "meu-dataset-teste-001",
+  "title": "Dataset de Teste 001",
+  "owner_org": "id-da-sua-organizacao",
+  "notes": "Criado via API.",
+  "tags": [{"name": "api_test"}]
+}'</code></pre>
+                                </div>
+                                <div class="code-block inactive" data-lang="javascript">
+                                    <pre><code class="language-javascript">async function criarDataset(apiKey, datasetData) {
+  const response = await fetch('https://dadosabertos.artesp.sp.gov.br/api/3/action/package_create', {
+    method: 'POST',
+    headers: {
+      'Authorization': apiKey,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(datasetData)
+  });
+  const data = await response.json();
+  if (response.ok && data.success) {
+    console.log('Dataset criado:', data.result);
+  } else {
+    console.error('Erro ao criar dataset:', data.error);
+  }
+}
+const minhaChaveApi = "SUA_CHAVE_DE_API_AQUI";
+const novoDataset = { 
+  name: "dataset-js-exemplo-002",
+  title: "Dataset Exemplo via JS 002",
+  owner_org: "id-da-sua-organizacao",
+  notes: "Criado via API com JavaScript.",
+  tags: [{name: "javascript"}, {name: "api"}]
+};
+// criarDataset(minhaChaveApi, novoDataset);</code></pre>
+                                </div>
+                                <div class="code-block inactive" data-lang="python">
+                                    <pre><code class="language-python">from ckanapi import RemoteCKAN, NotAuthorized, ValidationError
+
+API_KEY = 'SUA_CHAVE_DE_API_AQUI'
+ORG_ID = 'id-da-sua-organizacao'
+CKAN_URL = 'https://dadosabertos.artesp.sp.gov.br'
+
+ckan = RemoteCKAN(CKAN_URL, apikey=API_KEY)
+
+novo_dataset_data = {
+    "name": "meu-dataset-python-003",
+    "title": "Meu Dataset Python 003",
+    "owner_org": ORG_ID,
+    "notes": "Dataset criado via API com ckanapi.",
+    "tags": [{"name": "python"}, {"name": "ckanapi"}]
+}
+
+try:
+    pacote_criado = ckan.action.package_create(**novo_dataset_data)
+    print("Dataset criado com sucesso:", pacote_criado)
+except (NotAuthorized, ValidationError) as e:
+    print(f"Erro: {e}")</code></pre>
+                                </div>
+                                <div class="code-block inactive" data-lang="go">
+                                    <pre><code class="language-go">package main
+
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+)
+
+type Tag struct {
+	Name string `json:"name"`
+}
+
+type Dataset struct {
+	Name       string `json:"name"`
+	Title      string `json:"title"`
+	OwnerOrg   string `json:"owner_org"`
+	Notes      string `json:"notes"`
+	Tags       []Tag  `json:"tags"`
+}
+
+func main() {
+	apiKey := "SUA_CHAVE_DE_API_AQUI"
+	ckanURL := "https://dadosabertos.artesp.sp.gov.br/api/3/action/package_create"
+
+	dataset := Dataset{
+		Name:     "meu-dataset-teste-go-001",
+		Title:    "Dataset de Teste Go 001",
+		OwnerOrg: "id-da-sua-organizacao",
+		Notes:    "Criado via API com Go.",
+		Tags:     []Tag{{Name: "api_test_go"}},
+	}
+
+	jsonData, err := json.Marshal(dataset)
+	if err != nil {
+		fmt.Println("Erro ao converter para JSON:", err)
+		return
+	}
+
+	req, err := http.NewRequest("POST", ckanURL, bytes.NewBuffer(jsonData))
+	if err != nil {
+		fmt.Println("Erro ao criar a requisição:", err)
+		return
+	}
+
+	req.Header.Set("Authorization", apiKey)
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println("Erro ao enviar a requisição:", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	body, _ := ioutil.ReadAll(resp.Body)
+	fmt.Println("Resposta da API:", string(body))
+}
+</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="atualizar" class="mt-8">
+                        <h3 class="text-2xl font-semibold text-gray-700 mb-3">4.5 Atualizar Objetos (Requer Autenticação)</h3>
+                        <p class="mb-4"><strong>a) Atualizar um Dataset (package_update)</strong>: Atualiza um dataset existente.</p>
+                        <div class="code-block-container" id="code-update-dataset">
+                            <div class="tabs">
+                                <button class="tab-button active" data-lang="curl">cURL</button>
+                                <button class="tab-button" data-lang="javascript">JavaScript</button>
+                                <button class="tab-button" data-lang="python">Python</button>
+                                <button class="tab-button" data-lang="go">Go</button>
+                            </div>
+                             <div class="code-wrapper">
+                                <div class="code-block active" data-lang="curl"><pre><code class="language-bash"># Substitua 'meu-dataset-teste-001' pelo ID do dataset a ser atualizado
+curl -X POST "https://dadosabertos.artesp.sp.gov.br/api/3/action/package_update" \
+-H "Authorization: SUA_CHAVE_DE_API_AQUI" \
+-H "Content-Type: application/json" \
+-d '{
+  "id": "meu-dataset-teste-001",
+  "title": "Dataset de Teste 001 (Atualizado)"
+}'</code></pre></div>
+                                <div class="code-block inactive" data-lang="javascript"><pre><code class="language-javascript">async function atualizarDataset(apiKey, datasetData) {
+  const response = await fetch('https://dadosabertos.artesp.sp.gov.br/api/3/action/package_update', {
+    method: 'POST',
+    headers: {
+      'Authorization': apiKey,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(datasetData)
+  });
+  const data = await response.json();
+  if (response.ok && data.success) {
+    console.log('Dataset atualizado:', data.result);
+  } else {
+    console.error('Erro ao atualizar dataset:', data.error);
+  }
+}
+const minhaChaveApi = "SUA_CHAVE_DE_API_AQUI";
+const datasetAtualizado = {
+  id: "meu-dataset-teste-001", // ID ou nome do dataset
+  title: "Título Atualizado via JS"
+};
+// atualizarDataset(minhaChaveApi, datasetAtualizado);</code></pre></div>
+                                <div class="code-block inactive" data-lang="python"><pre><code class="language-python">from ckanapi import RemoteCKAN, NotAuthorized, ValidationError
+
+API_KEY = 'SUA_CHAVE_DE_API_AQUI'
+CKAN_URL = 'https://dadosabertos.artesp.sp.gov.br'
+
+ckan = RemoteCKAN(CKAN_URL, apikey=API_KEY)
+
+dataset_atualizado_data = {
+    "id": "meu-dataset-python-003",
+    "notes": "Descrição atualizada via API com ckanapi."
+}
+
+try:
+    pacote_atualizado = ckan.action.package_update(**dataset_atualizado_data)
+    print("Dataset atualizado com sucesso:", pacote_atualizado)
+except (NotAuthorized, ValidationError) as e:
+    print(f"Erro: {e}")</code></pre></div>
+                                <div class="code-block inactive" data-lang="go"><pre><code class="language-go">package main
+
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+)
+
+func main() {
+	apiKey := "SUA_CHAVE_DE_API_AQUI"
+	ckanURL := "https://dadosabertos.artesp.sp.gov.br/api/3/action/package_update"
+
+	updateData := map[string]interface{}{
+		"id":    "meu-dataset-teste-go-001",
+		"title": "Dataset de Teste Go 001 (Atualizado)",
+	}
+
+	jsonData, err := json.Marshal(updateData)
+	if err != nil {
+		fmt.Println("Erro ao converter para JSON:", err)
+		return
+	}
+
+	req, err := http.NewRequest("POST", ckanURL, bytes.NewBuffer(jsonData))
+	if err != nil {
+		fmt.Println("Erro ao criar a requisição:", err)
+		return
+	}
+
+	req.Header.Set("Authorization", apiKey)
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println("Erro ao enviar a requisição:", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	body, _ := ioutil.ReadAll(resp.Body)
+	fmt.Println("Resposta da API:", string(body))
+}
+</code></pre></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="deletar" class="mt-8">
+                        <h3 class="text-2xl font-semibold text-gray-700 mb-3">4.6 Deletar Objetos (Requer Autenticação)</h3>
+                        <p class="mb-4"><strong>a) Deletar um Dataset (package_delete)</strong>: Deleta um dataset.</p>
+                        <div class="code-block-container" id="code-delete-dataset">
+                            <div class="tabs">
+                                <button class="tab-button active" data-lang="curl">cURL</button>
+                                <button class="tab-button" data-lang="javascript">JavaScript</button>
+                                <button class="tab-button" data-lang="python">Python</button>
+                                <button class="tab-button" data-lang="go">Go</button>
+                            </div>
+                             <div class="code-wrapper">
+                                <div class="code-block active" data-lang="curl"><pre><code class="language-bash"># Substitua 'meu-dataset-teste-001' pelo ID do dataset a ser deletado
+curl -X POST "https://dadosabertos.artesp.sp.gov.br/api/3/action/package_delete" \
+-H "Authorization: SUA_CHAVE_DE_API_AQUI" \
+-H "Content-Type: application/json" \
+-d '{"id": "meu-dataset-teste-001"}'</code></pre></div>
+                                <div class="code-block inactive" data-lang="javascript"><pre><code class="language-javascript">async function deletarDataset(apiKey, datasetId) {
+  const response = await fetch('https://dadosabertos.artesp.sp.gov.br/api/3/action/package_delete', {
+    method: 'POST',
+    headers: {
+      'Authorization': apiKey,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ id: datasetId })
+  });
+  const data = await response.json();
+  if (response.ok && data.success) {
+    console.log('Dataset deletado com sucesso.');
+  } else {
+    console.error('Erro ao deletar dataset:', data.error);
+  }
+}
+const minhaChaveApi = "SUA_CHAVE_DE_API_AQUI";
+const idDoDataset = "meu-dataset-teste-001";
+// deletarDataset(minhaChaveApi, idDoDataset);</code></pre></div>
+                                <div class="code-block inactive" data-lang="python"><pre><code class="language-python">from ckanapi import RemoteCKAN, NotAuthorized
+
+API_KEY = 'SUA_CHAVE_DE_API_AQUI'
+CKAN_URL = 'https://dadosabertos.artesp.sp.gov.br'
+
+ckan = RemoteCKAN(CKAN_URL, apikey=API_KEY)
+
+id_do_dataset = "meu-dataset-python-003"
+
+try:
+    ckan.action.package_delete(id=id_do_dataset)
+    print(f"Dataset '{id_do_dataset}' deletado com sucesso.")
+except NotAuthorized:
+    print("Erro: Não autorizado.")
+except Exception as e:
+    print(f"Ocorreu um erro: {e}")</code></pre></div>
+                                <div class="code-block inactive" data-lang="go"><pre><code class="language-go">package main
+
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+)
+
+func main() {
+	apiKey := "SUA_CHAVE_DE_API_AQUI"
+	ckanURL := "https://dadosabertos.artesp.sp.gov.br/api/3/action/package_delete"
+
+	deleteData := map[string]string{
+		"id": "meu-dataset-teste-go-001",
+	}
+
+	jsonData, err := json.Marshal(deleteData)
+	if err != nil {
+		fmt.Println("Erro ao converter para JSON:", err)
+		return
+	}
+
+	req, err := http.NewRequest("POST", ckanURL, bytes.NewBuffer(jsonData))
+	if err != nil {
+		fmt.Println("Erro ao criar a requisição:", err)
+		return
+	}
+
+	req.Header.Set("Authorization", apiKey)
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println("Erro ao enviar a requisição:", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	body, _ := ioutil.ReadAll(resp.Body)
+	fmt.Println("Resposta da API:", string(body))
+}</code></pre></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="group-list" class="mt-8">
+                        <h3 class="text-2xl font-semibold text-gray-700 mb-3">4.7 Listar Grupos (group_list)</h3>
+                        <p class="mb-4">Retorna uma lista dos nomes de todos os grupos no site.</p>
+                        <div class="code-block-container" id="code-group-list">
+                            <div class="tabs">
+                                <button class="tab-button active" data-lang="curl">cURL</button>
+                                <button class="tab-button" data-lang="javascript">JavaScript</button>
+                                <button class="tab-button" data-lang="python">Python</button>
+                                <button class="tab-button" data-lang="go">Go</button>
+                            </div>
+                            <div class="code-wrapper">
+                                <div class="code-block active" data-lang="curl"><pre><code class="language-bash">curl -X GET "https://dadosabertos.artesp.sp.gov.br/api/3/action/group_list"</code></pre></div>
+                                <div class="code-block inactive" data-lang="javascript"><pre><code class="language-javascript">async function listarGrupos() {
+  try {
+    const response = await fetch('https://dadosabertos.artesp.sp.gov.br/api/3/action/group_list');
+    const data = await response.json();
+    if (data.success) {
+      console.log('Grupos:', data.result);
+    } else {
+      console.error('Erro ao listar grupos:', data.error);
+    }
+  } catch (error) {
+    console.error('Falha na requisição:', error);
+  }
+}
+listarGrupos();</code></pre></div>
+                                <div class="code-block inactive" data-lang="python"><pre><code class="language-python">import requests
+
+try:
+    response = requests.get('https://dadosabertos.artesp.sp.gov.br/api/3/action/group_list')
+    response.raise_for_status()
+    data = response.json()
+    if data.get('success'):
+        print('Grupos:', data.get('result'))
+    else:
+        print('Erro ao listar grupos:', data.get('error'))
+except requests.exceptions.RequestException as e:
+    print(f'Falha na requisição: {e}')</code></pre></div>
+                                <div class="code-block inactive" data-lang="go"><pre><code class="language-go">package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+)
+
+func main() {
+	resp, err := http.Get("https://dadosabertos.artesp.sp.gov.br/api/3/action/group_list")
+	if err != nil {
+		fmt.Println("Erro ao fazer a requisição:", err)
+		return
+	}
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+	var ckanResp struct {
+		Success bool     `json:"success"`
+		Result  []string `json:"result"`
+	}
+	json.Unmarshal(body, &ckanResp)
+	if ckanResp.Success {
+		fmt.Println("Grupos:", ckanResp.Result)
+	} else {
+		fmt.Println("Erro da API CKAN")
+	}
+}</code></pre></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="group-show" class="mt-8">
+                        <h3 class="text-2xl font-semibold text-gray-700 mb-3">4.8 Mostrar Detalhes de um Grupo (group_show)</h3>
+                        <p class="mb-4">Retorna os detalhes de um grupo.</p>
+                        <div class="code-block-container" id="code-group-show">
+                            <div class="tabs">
+                                <button class="tab-button active" data-lang="curl">cURL</button>
+                                <button class="tab-button" data-lang="javascript">JavaScript</button>
+                                <button class="tab-button" data-lang="python">Python</button>
+                                <button class="tab-button" data-lang="go">Go</button>
+                            </div>
+                            <div class="code-wrapper">
+                                <div class="code-block active" data-lang="curl"><pre><code class="language-bash">curl -X GET "https://dadosabertos.artesp.sp.gov.br/api/3/action/group_show?id=nome-do-grupo"</code></pre></div>
+                                <div class="code-block inactive" data-lang="javascript"><pre><code class="language-javascript">async function mostrarGrupo(groupId) {
+  try {
+    const response = await fetch(`https://dadosabertos.artesp.sp.gov.br/api/3/action/group_show?id=${groupId}`);
+    const data = await response.json();
+    if (data.success) {
+      console.log('Detalhes do Grupo:', data.result);
+    } else {
+      console.error(`Erro ao mostrar grupo ${groupId}:`, data.error);
+    }
+  } catch (error) {
+    console.error('Falha na requisição:', error);
+  }
+}
+mostrarGrupo('nome-do-grupo');</code></pre></div>
+                                <div class="code-block inactive" data-lang="python"><pre><code class="language-python">import requests
+
+def mostrar_grupo(group_id):
+    try:
+        params = {'id': group_id}
+        response = requests.get('https://dadosabertos.artesp.sp.gov.br/api/3/action/group_show', params=params)
+        response.raise_for_status()
+        data = response.json()
+        if data.get('success'):
+            print(f"Detalhes do Grupo ({group_id}):", data.get('result'))
+        else:
+            print(f"Erro ao mostrar grupo {group_id}:", data.get('error'))
+    except requests.exceptions.RequestException as e:
+        print(f"Falha na requisição: {e}")
+
+mostrar_grupo('nome-do-grupo')</code></pre></div>
+                                <div class="code-block inactive" data-lang="go"><pre><code class="language-go">package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+)
+
+func main() {
+	groupId := "nome-do-grupo"
+	url := fmt.Sprintf("https://dadosabertos.artesp.sp.gov.br/api/3/action/group_show?id=%s", groupId)
+	resp, err := http.Get(url)
+	if err != nil {
+		fmt.Println("Erro ao fazer a requisição:", err)
+		return
+	}
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+	var ckanResp struct {
+		Success bool            `json:"success"`
+		Result  json.RawMessage `json:"result"`
+	}
+	json.Unmarshal(body, &ckanResp)
+	if ckanResp.Success {
+		fmt.Println("Detalhes do Grupo:", string(ckanResp.Result))
+	} else {
+		fmt.Println("Erro da API CKAN")
+	}
+}</code></pre></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tag-list" class="mt-8">
+                        <h3 class="text-2xl font-semibold text-gray-700 mb-3">4.9 Listar Tags (tag_list)</h3>
+                        <p class="mb-4">Retorna uma lista dos nomes de todas as tags no site.</p>
+                        <div class="code-block-container" id="code-tag-list">
+                            <div class="tabs">
+                                <button class="tab-button active" data-lang="curl">cURL</button>
+                                <button class="tab-button" data-lang="javascript">JavaScript</button>
+                                <button class="tab-button" data-lang="python">Python</button>
+                                <button class="tab-button" data-lang="go">Go</button>
+                            </div>
+                            <div class="code-wrapper">
+                                <div class="code-block active" data-lang="curl"><pre><code class="language-bash">curl -X GET "https://dadosabertos.artesp.sp.gov.br/api/3/action/tag_list"</code></pre></div>
+                                <div class="code-block inactive" data-lang="javascript"><pre><code class="language-javascript">async function listarTags() {
+  try {
+    const response = await fetch('https://dadosabertos.artesp.sp.gov.br/api/3/action/tag_list');
+    const data = await response.json();
+    if (data.success) {
+      console.log('Tags:', data.result);
+    } else {
+      console.error('Erro ao listar tags:', data.error);
+    }
+  } catch (error) {
+    console.error('Falha na requisição:', error);
+  }
+}
+listarTags();</code></pre></div>
+                                <div class="code-block inactive" data-lang="python"><pre><code class="language-python">import requests
+
+try:
+    response = requests.get('https://dadosabertos.artesp.sp.gov.br/api/3/action/tag_list')
+    response.raise_for_status()
+    data = response.json()
+    if data.get('success'):
+        print('Tags:', data.get('result'))
+    else:
+        print('Erro ao listar tags:', data.get('error'))
+except requests.exceptions.RequestException as e:
+    print(f'Falha na requisição: {e}')</code></pre></div>
+                                <div class="code-block inactive" data-lang="go"><pre><code class="language-go">package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+)
+
+func main() {
+	resp, err := http.Get("https://dadosabertos.artesp.sp.gov.br/api/3/action/tag_list")
+	if err != nil {
+		fmt.Println("Erro ao fazer a requisição:", err)
+		return
+	}
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+	var ckanResp struct {
+		Success bool     `json:"success"`
+		Result  []string `json:"result"`
+	}
+	json.Unmarshal(body, &ckanResp)
+	if ckanResp.Success {
+		fmt.Println("Tags:", ckanResp.Result)
+	} else {
+		fmt.Println("Erro da API CKAN")
+	}
+}</code></pre></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tag-show" class="mt-8">
+                        <h3 class="text-2xl font-semibold text-gray-700 mb-3">4.10 Mostrar Detalhes de uma Tag (tag_show)</h3>
+                        <p class="mb-4">Retorna os detalhes de uma tag.</p>
+                        <div class="code-block-container" id="code-tag-show">
+                            <div class="tabs">
+                                <button class="tab-button active" data-lang="curl">cURL</button>
+                                <button class="tab-button" data-lang="javascript">JavaScript</button>
+                                <button class="tab-button" data-lang="python">Python</button>
+                                <button class="tab-button" data-lang="go">Go</button>
+                            </div>
+                            <div class="code-wrapper">
+                                <div class="code-block active" data-lang="curl"><pre><code class="language-bash">curl -X GET "https://dadosabertos.artesp.sp.gov.br/api/3/action/tag_show?id=nome-da-tag"</code></pre></div>
+                                <div class="code-block inactive" data-lang="javascript"><pre><code class="language-javascript">async function mostrarTag(tagId) {
+  try {
+    const response = await fetch(`https://dadosabertos.artesp.sp.gov.br/api/3/action/tag_show?id=${tagId}`);
+    const data = await response.json();
+    if (data.success) {
+      console.log('Detalhes da Tag:', data.result);
+    } else {
+      console.error(`Erro ao mostrar tag ${tagId}:`, data.error);
+    }
+  } catch (error) {
+    console.error('Falha na requisição:', error);
+  }
+}
+mostrarTag('nome-da-tag');</code></pre></div>
+                                <div class="code-block inactive" data-lang="python"><pre><code class="language-python">import requests
+
+def mostrar_tag(tag_id):
+    try:
+        params = {'id': tag_id}
+        response = requests.get('https://dadosabertos.artesp.sp.gov.br/api/3/action/tag_show', params=params)
+        response.raise_for_status()
+        data = response.json()
+        if data.get('success'):
+            print(f"Detalhes da Tag ({tag_id}):", data.get('result'))
+        else:
+            print(f"Erro ao mostrar tag {tag_id}:", data.get('error'))
+    except requests.exceptions.RequestException as e:
+        print(f"Falha na requisição: {e}")
+
+mostrar_tag('nome-da-tag')</code></pre></div>
+                                <div class="code-block inactive" data-lang="go"><pre><code class="language-go">package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+)
+
+func main() {
+	tagId := "nome-da-tag"
+	url := fmt.Sprintf("https://dadosabertos.artesp.sp.gov.br/api/3/action/tag_show?id=%s", tagId)
+	resp, err := http.Get(url)
+	if err != nil {
+		fmt.Println("Erro ao fazer a requisição:", err)
+		return
+	}
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+	var ckanResp struct {
+		Success bool            `json:"success"`
+		Result  json.RawMessage `json:"result"`
+	}
+	json.Unmarshal(body, &ckanResp)
+	if ckanResp.Success {
+		fmt.Println("Detalhes da Tag:", string(ckanResp.Result))
+	} else {
+		fmt.Println("Erro da API CKAN")
+	}
+}</code></pre></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="user-show" class="mt-8">
+                        <h3 class="text-2xl font-semibold text-gray-700 mb-3">4.11 Mostrar Detalhes de um Usuário (user_show)</h3>
+                        <p class="mb-4">Retorna os detalhes de um usuário.</p>
+                        <div class="code-block-container" id="code-user-show">
+                            <div class="tabs">
+                                <button class="tab-button active" data-lang="curl">cURL</button>
+                                <button class="tab-button" data-lang="javascript">JavaScript</button>
+                                <button class="tab-button" data-lang="python">Python</button>
+                                <button class="tab-button" data-lang="go">Go</button>
+                            </div>
+                            <div class="code-wrapper">
+                                <div class="code-block active" data-lang="curl"><pre><code class="language-bash">curl -X GET "https://dadosabertos.artesp.sp.gov.br/api/3/action/user_show?id=nome-do-usuario"</code></pre></div>
+                                <div class="code-block inactive" data-lang="javascript"><pre><code class="language-javascript">async function mostrarUsuario(userId) {
+  try {
+    const response = await fetch(`https://dadosabertos.artesp.sp.gov.br/api/3/action/user_show?id=${userId}`);
+    const data = await response.json();
+    if (data.success) {
+      console.log('Detalhes do Usuário:', data.result);
+    } else {
+      console.error(`Erro ao mostrar usuário ${userId}:`, data.error);
+    }
+  } catch (error) {
+    console.error('Falha na requisição:', error);
+  }
+}
+mostrarUsuario('nome-do-usuario');</code></pre></div>
+                                <div class="code-block inactive" data-lang="python"><pre><code class="language-python">import requests
+
+def mostrar_usuario(user_id):
+    try:
+        params = {'id': user_id}
+        response = requests.get('https://dadosabertos.artesp.sp.gov.br/api/3/action/user_show', params=params)
+        response.raise_for_status()
+        data = response.json()
+        if data.get('success'):
+            print(f"Detalhes do Usuário ({user_id}):", data.get('result'))
+        else:
+            print(f"Erro ao mostrar usuário {user_id}:", data.get('error'))
+    except requests.exceptions.RequestException as e:
+        print(f"Falha na requisição: {e}")
+
+mostrar_usuario('nome-do-usuario')</code></pre></div>
+                                <div class="code-block inactive" data-lang="go"><pre><code class="language-go">package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+)
+
+func main() {
+	userId := "nome-do-usuario"
+	url := fmt.Sprintf("https://dadosabertos.artesp.sp.gov.br/api/3/action/user_show?id=%s", userId)
+	resp, err := http.Get(url)
+	if err != nil {
+		fmt.Println("Erro ao fazer a requisição:", err)
+		return
+	}
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+	var ckanResp struct {
+		Success bool            `json:"success"`
+		Result  json.RawMessage `json:"result"`
+	}
+	json.Unmarshal(body, &ckanResp)
+	if ckanResp.Success {
+		fmt.Println("Detalhes do Usuário:", string(ckanResp.Result))
+	} else {
+		fmt.Println("Erro da API CKAN")
+	}
+}</code></pre></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="organization-list" class="mt-8">
+                        <h3 class="text-2xl font-semibold text-gray-700 mb-3">4.12 Listar Organizações (organization_list)</h3>
+                        <p class="mb-4">Retorna uma lista dos nomes de todas as organizações no site.</p>
+                        <div class="code-block-container" id="code-organization-list">
+                            <div class="tabs">
+                                <button class="tab-button active" data-lang="curl">cURL</button>
+                                <button class="tab-button" data-lang="javascript">JavaScript</button>
+                                <button class="tab-button" data-lang="python">Python</button>
+                                <button class="tab-button" data-lang="go">Go</button>
+                            </div>
+                            <div class="code-wrapper">
+                                <div class="code-block active" data-lang="curl"><pre><code class="language-bash">curl -X GET "https://dadosabertos.artesp.sp.gov.br/api/3/action/organization_list"</code></pre></div>
+                                <div class="code-block inactive" data-lang="javascript"><pre><code class="language-javascript">async function listarOrganizacoes() {
+  try {
+    const response = await fetch('https://dadosabertos.artesp.sp.gov.br/api/3/action/organization_list');
+    const data = await response.json();
+    if (data.success) {
+      console.log('Organizações:', data.result);
+    } else {
+      console.error('Erro ao listar organizações:', data.error);
+    }
+  } catch (error) {
+    console.error('Falha na requisição:', error);
+  }
+}
+listarOrganizacoes();</code></pre></div>
+                                <div class="code-block inactive" data-lang="python"><pre><code class="language-python">import requests
+
+try:
+    response = requests.get('https://dadosabertos.artesp.sp.gov.br/api/3/action/organization_list')
+    response.raise_for_status()
+    data = response.json()
+    if data.get('success'):
+        print('Organizações:', data.get('result'))
+    else:
+        print('Erro ao listar organizações:', data.get('error'))
+except requests.exceptions.RequestException as e:
+    print(f'Falha na requisição: {e}')</code></pre></div>
+                                <div class="code-block inactive" data-lang="go"><pre><code class="language-go">package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+)
+
+func main() {
+	resp, err := http.Get("https://dadosabertos.artesp.sp.gov.br/api/3/action/organization_list")
+	if err != nil {
+		fmt.Println("Erro ao fazer a requisição:", err)
+		return
+	}
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+	var ckanResp struct {
+		Success bool     `json:"success"`
+		Result  []string `json:"result"`
+	}
+	json.Unmarshal(body, &ckanResp)
+	if ckanResp.Success {
+		fmt.Println("Organizações:", ckanResp.Result)
+	} else {
+		fmt.Println("Erro da API CKAN")
+	}
+}</code></pre></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="organization-show" class="mt-8">
+                        <h3 class="text-2xl font-semibold text-gray-700 mb-3">4.13 Mostrar Detalhes de uma Organização (organization_show)</h3>
+                        <p class="mb-4">Retorna os detalhes de uma organização.</p>
+                        <div class="code-block-container" id="code-organization-show">
+                            <div class="tabs">
+                                <button class="tab-button active" data-lang="curl">cURL</button>
+                                <button class="tab-button" data-lang="javascript">JavaScript</button>
+                                <button class="tab-button" data-lang="python">Python</button>
+                                <button class="tab-button" data-lang="go">Go</button>
+                            </div>
+                            <div class="code-wrapper">
+                                <div class="code-block active" data-lang="curl"><pre><code class="language-bash">curl -X GET "https://dadosabertos.artesp.sp.gov.br/api/3/action/organization_show?id=nome-da-organizacao"</code></pre></div>
+                                <div class="code-block inactive" data-lang="javascript"><pre><code class="language-javascript">async function mostrarOrganizacao(orgId) {
+  try {
+    const response = await fetch(`https://dadosabertos.artesp.sp.gov.br/api/3/action/organization_show?id=${orgId}`);
+    const data = await response.json();
+    if (data.success) {
+      console.log('Detalhes da Organização:', data.result);
+    } else {
+      console.error(`Erro ao mostrar organização ${orgId}:`, data.error);
+    }
+  } catch (error) {
+    console.error('Falha na requisição:', error);
+  }
+}
+mostrarOrganizacao('nome-da-organizacao');</code></pre></div>
+                                <div class="code-block inactive" data-lang="python"><pre><code class="language-python">import requests
+
+def mostrar_organizacao(org_id):
+    try:
+        params = {'id': org_id}
+        response = requests.get('https://dadosabertos.artesp.sp.gov.br/api/3/action/organization_show', params=params)
+        response.raise_for_status()
+        data = response.json()
+        if data.get('success'):
+            print(f"Detalhes da Organização ({org_id}):", data.get('result'))
+        else:
+            print(f"Erro ao mostrar organização {org_id}:", data.get('error'))
+    except requests.exceptions.RequestException as e:
+        print(f"Falha na requisição: {e}")
+
+mostrar_organizacao('nome-da-organizacao')</code></pre></div>
+                                <div class="code-block inactive" data-lang="go"><pre><code class="language-go">package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+)
+
+func main() {
+	orgId := "nome-da-organizacao"
+	url := fmt.Sprintf("https://dadosabertos.artesp.sp.gov.br/api/3/action/organization_show?id=%s", orgId)
+	resp, err := http.Get(url)
+	if err != nil {
+		fmt.Println("Erro ao fazer a requisição:", err)
+		return
+	}
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+	var ckanResp struct {
+		Success bool            `json:"success"`
+		Result  json.RawMessage `json:"result"`
+	}
+	json.Unmarshal(body, &ckanResp)
+	if ckanResp.Success {
+		fmt.Println("Detalhes da Organização:", string(ckanResp.Result))
+	} else {
+		fmt.Println("Erro da API CKAN")
+	}
+}</code></pre></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="resource-show" class="mt-8">
+                        <h3 class="text-2xl font-semibold text-gray-700 mb-3">4.14 Mostrar Detalhes de um Recurso (resource_show)</h3>
+                        <p class="mb-4">Retorna os detalhes de um recurso.</p>
+                        <div class="code-block-container" id="code-resource-show">
+                            <div class="tabs">
+                                <button class="tab-button active" data-lang="curl">cURL</button>
+                                <button class="tab-button" data-lang="javascript">JavaScript</button>
+                                <button class="tab-button" data-lang="python">Python</button>
+                                <button class="tab-button" data-lang="go">Go</button>
+                            </div>
+                            <div class="code-wrapper">
+                                <div class="code-block active" data-lang="curl"><pre><code class="language-bash">curl -X GET "https://dadosabertos.artesp.sp.gov.br/api/3/action/resource_show?id=id-do-recurso"</code></pre></div>
+                                <div class="code-block inactive" data-lang="javascript"><pre><code class="language-javascript">async function mostrarRecurso(resourceId) {
+  try {
+    const response = await fetch(`https://dadosabertos.artesp.sp.gov.br/api/3/action/resource_show?id=${resourceId}`);
+    const data = await response.json();
+    if (data.success) {
+      console.log('Detalhes do Recurso:', data.result);
+    } else {
+      console.error(`Erro ao mostrar recurso ${resourceId}:`, data.error);
+    }
+  } catch (error) {
+    console.error('Falha na requisição:', error);
+  }
+}
+mostrarRecurso('id-do-recurso');</code></pre></div>
+                                <div class="code-block inactive" data-lang="python"><pre><code class="language-python">import requests
+
+def mostrar_recurso(resource_id):
+    try:
+        params = {'id': resource_id}
+        response = requests.get('https://dadosabertos.artesp.sp.gov.br/api/3/action/resource_show', params=params)
+        response.raise_for_status()
+        data = response.json()
+        if data.get('success'):
+            print(f"Detalhes do Recurso ({resource_id}):", data.get('result'))
+        else:
+            print(f"Erro ao mostrar recurso {resource_id}:", data.get('error'))
+    except requests.exceptions.RequestException as e:
+        print(f"Falha na requisição: {e}")
+
+mostrar_recurso('id-do-recurso')</code></pre></div>
+                                <div class="code-block inactive" data-lang="go"><pre><code class="language-go">package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+)
+
+func main() {
+	resourceId := "id-do-recurso"
+	url := fmt.Sprintf("https://dadosabertos.artesp.sp.gov.br/api/3/action/resource_show?id=%s", resourceId)
+	resp, err := http.Get(url)
+	if err != nil {
+		fmt.Println("Erro ao fazer a requisição:", err)
+		return
+	}
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+	var ckanResp struct {
+		Success bool            `json:"success"`
+		Result  json.RawMessage `json:"result"`
+	}
+	json.Unmarshal(body, &ckanResp)
+	if ckanResp.Success {
+		fmt.Println("Detalhes do Recurso:", string(ckanResp.Result))
+	} else {
+		fmt.Println("Erro da API CKAN")
+	}
+}</code></pre></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="resource-search" class="mt-8">
+                        <h3 class="text-2xl font-semibold text-gray-700 mb-3">4.15 Pesquisar Recursos (resource_search)</h3>
+                        <p class="mb-4">Pesquisa por recursos que satisfazem os critérios de busca.</p>
+                        <div class="code-block-container" id="code-resource-search">
+                            <div class="tabs">
+                                <button class="tab-button active" data-lang="curl">cURL</button>
+                                <button class="tab-button" data-lang="javascript">JavaScript</button>
+                                <button class="tab-button" data-lang="python">Python</button>
+                                <button class="tab-button" data-lang="go">Go</button>
+                            </div>
+                            <div class="code-wrapper">
+                                <div class="code-block active" data-lang="curl"><pre><code class="language-bash">curl -X GET "https://dadosabertos.artesp.sp.gov.br/api/3/action/resource_search?query=name:meu-recurso"</code></pre></div>
+                                <div class="code-block inactive" data-lang="javascript"><pre><code class="language-javascript">async function pesquisarRecursos(query) {
+  try {
+    const response = await fetch(`https://dadosabertos.artesp.sp.gov.br/api/3/action/resource_search?query=${query}`);
+    const data = await response.json();
+    if (data.success) {
+      console.log('Resultados da Pesquisa de Recursos:', data.result);
+    } else {
+      console.error(`Erro ao pesquisar recursos com a query ${query}:`, data.error);
+    }
+  } catch (error) {
+    console.error('Falha na requisição:', error);
+  }
+}
+pesquisarRecursos('name:meu-recurso');</code></pre></div>
+                                <div class="code-block inactive" data-lang="python"><pre><code class="language-python">import requests
+
+def pesquisar_recursos(query):
+    try:
+        params = {'query': query}
+        response = requests.get('https://dadosabertos.artesp.sp.gov.br/api/3/action/resource_search', params=params)
+        response.raise_for_status()
+        data = response.json()
+        if data.get('success'):
+            print(f"Resultados da Pesquisa de Recursos ({query}):", data.get('result'))
+        else:
+            print(f"Erro ao pesquisar recursos com a query {query}:", data.get('error'))
+    except requests.exceptions.RequestException as e:
+        print(f"Falha na requisição: {e}")
+
+pesquisar_recursos('name:meu-recurso')</code></pre></div>
+                                <div class="code-block inactive" data-lang="go"><pre><code class="language-go">package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+)
+
+func main() {
+	query := "name:meu-recurso"
+	url := fmt.Sprintf("https://dadosabertos.artesp.sp.gov.br/api/3/action/resource_search?query=%s", query)
+	resp, err := http.Get(url)
+	if err != nil {
+		fmt.Println("Erro ao fazer a requisição:", err)
+		return
+	}
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+	var ckanResp struct {
+		Success bool            `json:"success"`
+		Result  json.RawMessage `json:"result"`
+	}
+	json.Unmarshal(body, &ckanResp)
+	if ckanResp.Success {
+		fmt.Println("Resultados da Pesquisa de Recursos:", string(ckanResp.Result))
+	} else {
+		fmt.Println("Erro da API CKAN")
+	}
+}</code></pre></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Seções restantes -->
+                <section id="upload">
+                    <h2 class="text-3xl font-semibold text-gray-800 mb-4">5. Upload de Arquivos para Recursos</h2>
+                    <p>Ao criar ou atualizar um recurso, você pode fazer o upload de um arquivo diretamente para o
+                        FileStore do CKAN através de uma requisição <code>multipart/form-data</code>. O campo para o
+                        arquivo geralmente é <code>upload</code>.</p>
+                    <div class="code-block-container" id="code-upload-file">
+                        <div class="tabs">
+                            <button class="tab-button active" data-lang="curl">cURL</button>
+                            <button class="tab-button" data-lang="python">Python</button>
+                            <button class="tab-button" data-lang="javascript">JavaScript</button>
+                            <button class="tab-button" data-lang="go">Go</button>
+                        </div>
+                        <div class="code-wrapper">
+                            <div class="code-block active" data-lang="curl">
+                                <pre><code class="language-bash">curl -X POST "https://dadosabertos.artesp.sp.gov.br/api/3/action/resource_create" \
+-H "Authorization: SUA_CHAVE_DE_API_AQUI" \
+-F "package_id=ID_DO_PACOTE" \
+-F "name=Recurso com Upload" \
+-F "upload=@/caminho/para/seu/arquivo.csv"</code></pre>
+                            </div>
+                            <div class="code-block inactive" data-lang="python">
+                                <pre><code class="language-python">from ckanapi import RemoteCKAN
+
+# ... (configuração do RemoteCKAN como antes)
+ckan = RemoteCKAN('https://dadosabertos.artesp.sp.gov.br', apikey='SUA_CHAVE_DE_API_AQUI')
+ID_DO_PACOTE = 'meu-dataset-python-003'
+CAMINHO_ARQUIVO = '/caminho/para/seu/arquivo.csv'
+
+try:
+    with open(CAMINHO_ARQUIVO, 'rb') as f_upload:
+        recurso = ckan.action.resource_create(
+            package_id=ID_DO_PACOTE,
+            name="Recurso Upload Python CSV",
+            upload=f_upload,
+            format="CSV"
+        )
+    print("Recurso com upload criado:", recurso)
+except Exception as e:
+    print(f"Erro ao fazer upload: {e}")</code></pre>
+                            </div>
+                            <div class="code-block inactive" data-lang="javascript">
+                                <pre><code class="language-javascript">// Geralmente a partir de um &lt;input type="file"&gt;
+async function criarRecursoComUpload(apiKey, packageId, fileObject) {
+    const formData = new FormData();
+    formData.append('package_id', packageId);
+    formData.append('name', `Recurso Upload JS - ${fileObject.name}`);
+    formData.append('upload', fileObject, fileObject.name);
+
+    const response = await fetch('https://dadosabertos.artesp.sp.gov.br/api/3/action/resource_create', {
+        method: 'POST',
+        headers: { 'Authorization': apiKey },
+        body: formData
+    });
+    const data = await response.json();
+    if (data.success) {
+        console.log('Recurso com upload criado:', data.result);
+    } else {
+        console.error('Erro ao criar recurso:', data.error);
+    }
+}</code></pre>
+                            </div>
+                            <div class="code-block inactive" data-lang="go">
+                                <pre><code class="language-go">package main
+
+import (
+	"bytes"
+	"fmt"
+	"io"
+	"mime/multipart"
+	"net/http"
+	"os"
+)
+
+func main() {
+	apiKey := "SUA_CHAVE_DE_API_AQUI"
+	packageID := "ID_DO_PACOTE"
+	filePath := "/caminho/para/seu/arquivo.csv"
+
+	file, err := os.Open(filePath)
+	if err != nil {
+		fmt.Println("Erro ao abrir o arquivo:", err)
+		return
+	}
+	defer file.Close()
+
+	body := &bytes.Buffer{}
+	writer := multipart.NewWriter(body)
+
+	writer.WriteField("package_id", packageID)
+	writer.WriteField("name", "Recurso com Upload Go")
+
+	part, err := writer.CreateFormFile("upload", file.Name())
+	if err != nil {
+		fmt.Println("Erro ao criar parte do formulário:", err)
+		return
+	}
+
+	_, err = io.Copy(part, file)
+	if err != nil {
+		fmt.Println("Erro ao copiar dados do arquivo:", err)
+		return
+	}
+	writer.Close()
+
+	req, err := http.NewRequest("POST", "https://dadosabertos.artesp.sp.gov.br/api/3/action/resource_create", body)
+	if err != nil {
+		fmt.Println("Erro ao criar a requisição:", err)
+		return
+	}
+
+	req.Header.Set("Authorization", apiKey)
+	req.Header.Set("Content-Type", writer.FormDataContentType())
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println("Erro ao enviar a requisição:", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	respBody, _ := ioutil.ReadAll(resp.Body)
+	fmt.Println("Resposta da API:", string(respBody))
+}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="cli">
+                    <h2 class="text-3xl font-semibold text-gray-800 mb-4">6. CLI ckanapi e Módulo Python</h2>
+                    <p>Para usuários de Python, a ferramenta <code>ckanapi</code> oferece uma interface de linha de comando e um
+                        módulo que simplificam muitas operações.</p>
+                    <p class="mb-2"><strong>Instalação:</strong></p>
+                    <div class="code-block" data-lang="bash">
+                        <pre><code class="language-bash">pip install ckanapi</code></pre>
+                    </div>
+                    <p class="mt-4 mb-2"><strong>Exemplo de uso (listar datasets):</strong></p>
+                    <div class="code-block" data-lang="bash">
+                        <pre><code class="language-bash">ckanapi action package_list -r https://dadosabertos.artesp.sp.gov.br</code></pre>
+                    </div>
+                </section>
+
+                <section id="dicas">
+                    <h2 class="text-3xl font-semibold text-gray-800 mb-4">7. Dicas e Boas Práticas</h2>
+                    <ul class="list-disc list-inside space-y-2 bg-blue-50 p-4 rounded-lg">
+                        <li><strong>Verifique Sempre <code>success</code>:</strong> Não confie apenas no código de status HTTP 200.
+                        </li>
+                        <li><strong>Rate Limiting:</strong> Esteja ciente de que algumas instâncias CKAN podem ter limites de taxa.
+                        </li>
+                        <li><strong>Tratamento de Erros:</strong> Implemente um tratamento de erros robusto, analisando o objeto
+                            <code>error</code>.</li>
+                        <li><strong>Paginação:</strong> Use os parâmetros <code>rows</code> e <code>start</code> (ou
+                            <code>limit</code> e <code>offset</code>) para paginar os resultados.</li>
+                        <li><strong>Documentação Oficial:</strong> Consulte sempre a documentação oficial do CKAN para a lista
+                            completa de ações.</li>
+                    </ul>
+                </section>
+
+                <section id="guia-rapido">
+                    <h2 class="text-3xl font-semibold text-gray-800 mb-4">8. Guia Rápido de Ações da API</h2>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Ação
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                                        Descrição</th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Método
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">
+                                        Autenticação</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap font-mono text-sm">package_list</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Lista os nomes de todos os datasets.</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">GET</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Não</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap font-mono text-sm">package_show</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Mostra detalhes de um dataset.</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">GET</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Não (públicos)</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap font-mono text-sm">package_search</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Busca por datasets.</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">GET</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Não</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap font-mono text-sm">package_create</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Cria um novo dataset.</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">POST</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm"><span
+                                            class="font-semibold text-red-600">Sim</span></td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap font-mono text-sm">package_update</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Atualiza um dataset existente.</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">POST</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm"><span
+                                            class="font-semibold text-red-600">Sim</span></td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap font-mono text-sm">package_delete</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Deleta um dataset.</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">POST</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm"><span
+                                            class="font-semibold text-red-600">Sim</span></td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap font-mono text-sm">group_list</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Lista os grupos do site.</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">GET</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Não</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap font-mono text-sm">group_show</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Mostra detalhes de um grupo.</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">GET</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Não</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap font-mono text-sm">tag_list</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Lista as tags do site.</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">GET</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Não</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap font-mono text-sm">tag_show</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Mostra detalhes de uma tag.</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">GET</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Não</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap font-mono text-sm">user_show</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Mostra detalhes de um usuário.</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">GET</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Não</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap font-mono text-sm">organization_list</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Lista as organizações do site.</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">GET</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Não</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap font-mono text-sm">organization_show</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Mostra detalhes de uma organização.</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">GET</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Não</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap font-mono text-sm">resource_show</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Mostra detalhes de um recurso.</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">GET</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Não</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap font-mono text-sm">resource_search</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Busca por recursos.</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">GET</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Não</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                
+
+                <section id="status-codes">
+                    <h2 class="text-3xl font-semibold text-gray-800 mb-4">10. Códigos de Status</h2>
+                    <p class="mb-4">Códigos de status HTTP padrão são usados para sinalizar os resultados dos métodos.</p>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Código</th>
+                                    <th class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Nome</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap font-mono text-sm">200</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">OK</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap font-mono text-sm">201</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">OK e novo objeto criado</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap font-mono text-sm">301</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Movido Permanentemente</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap font-mono text-sm">400</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Requisição Inválida</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap font-mono text-sm">403</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Não Autorizado</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap font-mono text-sm">404</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Não Encontrado</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap font-mono text-sm">409</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Conflito</td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap font-mono text-sm">500</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm">Erro de Serviço</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="jsonp-support">
+                    <h2 class="text-3xl font-semibold text-gray-800 mb-4">11. Suporte a JSONP</h2>
+                    <p class="mb-4">Para permitir que scripts de outros sites acessem a API, os dados podem ser retornados no formato JSONP, onde os dados JSON são "preenchidos" com uma chamada de função. A função é nomeada no parâmetro 'callback'.</p>
+                    <div class="code-block" data-lang="bash">
+                        <pre><code class="language-bash">http://demo.ckan.org/api/3/action/package_show?id=adur_district_spending&callback=myfunction</code></pre>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Script para abas de código e botão de copiar
+        document.addEventListener('DOMContentLoaded', () => {
+            // Lógica das abas
+            const codeContainers = document.querySelectorAll('.code-block-container');
+            codeContainers.forEach(container => {
+                const tabs = container.querySelectorAll('.tab-button');
+                const codeBlocks = container.querySelectorAll('.code-block');
+
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        // Desativa todas as abas e blocos
+                        tabs.forEach(t => t.classList.remove('active'));
+                        codeBlocks.forEach(b => {
+                            b.classList.remove('active');
+                            b.classList.add('inactive');
+                        });
+
+                        // Ativa a aba e o bloco clicado
+                        tab.classList.add('active');
+                        const lang = tab.dataset.lang;
+                        const blockToShow = container.querySelector(`.code-block[data-lang="${lang}"]`);
+                        if (blockToShow) {
+                            blockToShow.classList.remove('inactive');
+                            blockToShow.classList.add('active');
+                        }
+                    });
+                });
+            });
+
+            // Lógica de copiar código
+            const allCodeBlocks = document.querySelectorAll('.code-block, .code-wrapper .code-block');
+            allCodeBlocks.forEach(block => {
+                const pre = block.querySelector('pre');
+                if (pre) {
+                    const copyButton = document.createElement('button');
+                    copyButton.textContent = 'Copiar';
+                    copyButton.className = 'absolute top-2 right-2 bg-gray-600 text-white text-xs font-semibold py-1 px-2 rounded-md hover:bg-gray-700 transition-colors opacity-50 hover:opacity-100';
+
+                    block.style.position = 'relative';
+                    block.appendChild(copyButton);
+
+                    copyButton.addEventListener('click', () => {
+                        const code = pre.querySelector('code').innerText;
+
+                        const textarea = document.createElement('textarea');
+                        textarea.value = code;
+                        document.body.appendChild(textarea);
+                        textarea.select();
+                        try {
+                            document.execCommand('copy');
+                            copyButton.textContent = 'Copiado!';
+                        } catch (err) {
+                            copyButton.textContent = 'Erro!';
+                            console.error('Falha ao copiar: ', err);
+                        }
+                        document.body.removeChild(textarea);
+
+                        setTimeout(() => {
+                            copyButton.textContent = 'Copiar';
+                        }, 2000);
+                    });
+                }
+            });
+
+            // Estilização dos blocos de código
+            document.querySelectorAll('.code-block, .code-wrapper').forEach(wrapper => {
+                const preElement = wrapper.querySelector('pre');
+                if (preElement) {
+                    wrapper.classList.add('bg-gray-800', 'rounded-lg', 'p-4', 'my-4', 'overflow-x-auto');
+                    preElement.classList.add('text-sm', 'text-white');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
